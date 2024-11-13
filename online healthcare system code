@@ -1,0 +1,124 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+class User {
+    String username;
+    String password;
+
+    User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public boolean authenticate(String username, String password) {
+        return this.username.equals(username) && this.password.equals(password);
+    }
+}
+
+class Patient extends User {
+    String name;
+    String email;
+
+    Patient(String username, String password, String name, String email) {
+        super(username, password);
+        this.name = name;
+        this.email = email;
+    }
+}
+
+class Appointment {
+    Patient patient;
+    String date;
+    String time;
+
+    Appointment(Patient patient, String date, String time) {
+        this.patient = patient;
+        this.date = date;
+        this.time = time;
+    }
+
+    @Override
+    public String toString() {
+        return "Appointment{" +
+                "patient=" + patient.name +
+                ", date='" + date + '\'' +
+                ", time='" + time + '\'' +
+                '}';
+    }
+}
+
+class HealthcareSystem {
+    List<Patient> patients = new ArrayList<>();
+    List<Appointment> appointments = new ArrayList<>();
+
+    public void registerPatient(String username, String password, String name, String email) {
+        patients.add(new Patient(username, password, name, email));
+    }
+
+    public void createAppointment(Patient patient, String date, String time) {
+        appointments.add(new Appointment(patient, date, time));
+    }
+
+    public void displayAppointments() {
+        if (appointments.isEmpty()) {
+            System.out.println("No appointments scheduled.");
+            return;
+        }
+        for (Appointment appointment : appointments) {
+            System.out.println(appointment);
+        }
+    }
+
+    public Patient authenticatePatient(String username, String password) {
+        for (Patient patient : patients) {
+            if (patient.authenticate(username, password)) {
+                return patient;
+            }
+        }
+        return null;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        HealthcareSystem healthcareSystem = new HealthcareSystem();
+
+        // Register a patient
+        System.out.print("Register patient username: ");
+        String username = scanner.nextLine();
+        System.out.print("Register patient password: ");
+        String password = scanner.nextLine();
+        System.out.print("Register patient name: ");
+        String name = scanner.nextLine();
+        System.out.print("Register patient email: ");
+        String email = scanner.nextLine();
+        
+        healthcareSystem.registerPatient(username, password, name, email);
+
+        // Authenticate patient
+        System.out.print("Login username: ");
+        String loginUsername = scanner.nextLine();
+        System.out.print("Login password: ");
+        String loginPassword = scanner.nextLine();
+
+        Patient patient = healthcareSystem.authenticatePatient(loginUsername, loginPassword);
+        if (patient != null) {
+            System.out.println("Login successful. Welcome, " + patient.name);
+            System.out.print("Enter appointment date (YYYY-MM-DD): ");
+            String date = scanner.nextLine();
+            System.out.print("Enter appointment time (HH:MM): ");
+            String time = scanner.nextLine();
+
+            healthcareSystem.createAppointment(patient, date, time);
+            System.out.println("Appointment created successfully.");
+            System.out.println("Scheduled Appointments:");
+            healthcareSystem.displayAppointments();
+        } else {
+            System.out.println("Login failed. Invalid credentials.");
+        }
+
+        scanner.close();
+    }
+}
