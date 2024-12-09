@@ -1,0 +1,23 @@
+Register Page: src/main/resources/templates/register.html
+html
+Copy code
+<form action="/register" method="post">
+    <label>Username: <input type="text" name="username" required></label>
+    <label>Password: <input type="password" name="password" required></label>
+    <label>Name: <input type="text" name="name" required></label>
+    <label>Email: <input type="email" name="email" required></label>
+    <button type="submit">Register</button>
+</form>
+Login Page: src/main/resources/templates/login.html
+html
+Copy code
+<form action="/login" method="post">
+    <label>Username: <input type="text" name="username" required></label>
+    <label>Password: <input type="password" name="password" required></label>
+    <button type="submit">Login</button>
+</form>
+<p th:text="${error}"></p>
+Dashboard Page: src/main/resources/templates/dashboard.html
+html
+Copy code
+<h1>Welcome, <span th:text="${user.name}"></span></h1>
