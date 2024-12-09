@@ -1,0 +1,75 @@
+const users = [];
+const appointments = [];
+
+ 
+document.getElementById("register-form").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const username = document.getElementById("reg-username").value.trim();
+  const password = document.getElementById("reg-password").value;
+  const name = document.getElementById("reg-name").value.trim();
+  const email = document.getElementById("reg-email").value.trim();
+
+  if (!username || !password || !name || !email) {
+    alert("All fields are required.");
+    return;
+  }
+
+  if (users.find(user => user.username === username)) {
+    alert("Username already exists.");
+    return;
+  }
+
+  users.push({ username, password, name, email });
+  alert("Registration successful!");
+  document.getElementById("register-form").reset();
+});
+
+ 
+document.getElementById("login-form").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const username = document.getElementById("login-username").value.trim();
+  const password = document.getElementById("login-password").value;
+
+  const user = users.find(user => user.username === username && user.password === password);
+
+  if (user) {
+    alert(Welcome, ${user.name}!);
+    document.getElementById("login-section").style.display = "none";
+    document.getElementById("appointment-section").style.display = "block";
+    document.getElementById("login-form").reset();
+  } else {
+    alert("Invalid credentials.");
+  }
+});
+
+ 
+document.getElementById("appointment-form").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const date = document.getElementById("appointment-date").value;
+  const time = document.getElementById("appointment-time").value;
+
+  if (!date || !time) {
+    alert("Date and time are required.");
+    return;
+  }
+
+  appointments.push({ date, time });
+  alert("Appointment scheduled successfully!");
+  document.getElementById("appointment-form").reset();
+  updateAppointmentList();
+});
+
+ 
+function updateAppointmentList() {
+  const appointmentList = document.getElementById("appointment-list");
+  appointmentList.innerHTML = "";
+
+  appointments.forEach(app => {
+    const listItem = document.createElement("li");
+    listItem.textContent = Date: ${app.date}, Time: ${app.time};
+    appointmentList.appendChild(listItem);
+  });
+}
